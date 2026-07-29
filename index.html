@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trackline Courier Co. — Dispatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          asphalt:   '#1E2023',
+          asphalt2:  '#282B2F',
+          asphalt3:  '#34383D',
+          chalk:     '#EDEDE3',
+          chalkdim:  '#9B9C93',
+          safety:    '#C9D93C',
+          route:     '#4C86A8',
+          stop:      '#D9503F',
+          stamp:     '#3F7A55',
+        },
+        fontFamily: {
+          display: ['Oswald', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        }
+      }
+    }
+  }
+</script>
+
+</head>
+<body class="min-h-screen">
+
+<div class="flex flex-col lg:flex-row min-h-screen">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="flex lg:flex-col items-center lg:items-stretch justify-between lg:justify-start
+                 bg-asphalt2 border-b lg:border-b-0 lg:border-r border-asphalt3
+                 px-4 lg:px-3 py-3 lg:py-5 lg:w-[92px] shrink-0">
+    <div class="flex items-center gap-2 lg:flex-col lg:gap-1 lg:mb-8">
+      <span class="font-display font-bold text-xl tracking-tight text-safety border-2 border-safety rounded-sm px-1.5 leading-none py-0.5">TL</span>
+      <span class="hidden lg:block text-[10px] text-chalkdim tracking-widest mt-1">TRACKLINE</span>
+    </div>
+
+    <nav aria-label="Primary" class="lg:flex-1">
+      <ul class="flex lg:flex-col gap-1">
+        <li><a href="#dispatch" class="navlink is-active" aria-current="page">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg>
+          <span class="hidden lg:inline text-[13px]">Dispatch</span>
+        </a></li>
+        <li><a href="#manifest" class="navlink">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="3.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="3.5" cy="18" r="1.3" fill="currentColor" stroke="none"/></svg>
+          <span class="hidden lg:inline text-[13px]">Manifest</span>
+        </a></li>
+        <li><a href="#couriers" class="navlink">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17 10 8h4l4 9M10 8 7 5h3"/></svg>
+          <span class="hidden lg:inline text-[13px]">Couriers</span>
+        </a></li>
+        <li><a href="#zones" class="navlink">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="10" r="2.3"/></svg>
+          <span class="hidden lg:inline text-[13px]">Zones</span>
+        </a></li>
+      </ul>
+    </nav>
+
+    <div class="hidden lg:block text-[10px] text-chalkdim leading-snug border-t border-asphalt3 pt-3">
+      Shift B<br>07:00–15:00
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN ===================== -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- HEADER -->
+    <header class="flex flex-wrap items-center justify-between gap-3 px-5 lg:px-8 py-4 border-b border-asphalt3">
+      <div>
+        <h1 class="font-display font-semibold text-lg tracking-wide">DISPATCH BOARD</h1>
+        <p class="text-xs text-chalkdim">Trackline Courier Co. — by bike, since 2014</p>
+      </div>
+      <div class="flex items-center gap-4 text-right">
+        <div>
+          <time id="clock" class="font-mono text-sm text-chalk block">--:--:--</time>
+          <span class="text-[11px] text-chalkdim">Zone: Old Port HQ</span>
+        </div>
+        <span class="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-safety border border-safety/40 rounded-sm px-2 py-1">
+          <span class="dot dot--onroute"></span> Live
+        </span>
+      </div>
+    </header>
+
+    <main class="flex-1 px-5 lg:px-8 py-6 space-y-8">
+
+      <!-- STATS -->
+      <section aria-label="Today's summary" class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <article class="rise bg-asphalt2 border border-asphalt3 rounded-sm p-4">
+          <p class="stat-num text-3xl text-chalk" id="stat-active">14</p>
+          <p class="text-[11px] uppercase tracking-widest text-chalkdim mt-1">Active riders</p>
+        </article>
+        <article class="rise bg-asphalt2 border border-asphalt3 rounded-sm p-4">
+          <p class="stat-num text-3xl text-route" id="stat-transit">23</p>
+          <p class="text-[11px] uppercase tracking-widest text-chalkdim mt-1">In transit</p>
+        </article>
+        <article class="rise bg-asphalt2 border border-asphalt3 rounded-sm p-4">
+          <p class="stat-num text-3xl text-stamp" id="stat-delivered">187</p>
+          <p class="text-[11px] uppercase tracking-widest text-chalkdim mt-1">Delivered today</p>
+        </article>
+        <article class="rise bg-asphalt2 border border-asphalt3 rounded-sm p-4">
+          <p class="stat-num text-3xl text-stop" id="stat-late">3</p>
+          <p class="text-[11px] uppercase tracking-widest text-chalkdim mt-1">Running late</p>
+        </article>
+      </section>
+
+      <!-- MANIFEST + NEW DISPATCH -->
+      <section class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6" id="manifest">
+
+        <!-- MANIFEST LIST -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="font-display text-sm tracking-widest uppercase text-chalkdim">Today's manifest</h2>
+            <span class="text-[11px] text-chalkdim font-mono"><span id="visible-count">5</span> of <span id="total-count">41</span> shown</span>
+          </div>
+
+          <!-- filter tabs + search + sort -->
+          <div class="flex flex-wrap items-center gap-2 mb-2" role="group" aria-label="Filter manifest by status">
+            <button type="button" class="filter-tab is-active" data-filter="all">All</button>
+            <button type="button" class="filter-tab" data-filter="transit">In transit</button>
+            <button type="button" class="filter-tab" data-filter="pending">Pending</button>
+            <button type="button" class="filter-tab" data-filter="late">Late</button>
+            <button type="button" class="filter-tab" data-filter="done">Delivered</button>
+            <label for="manifest-search" class="sr-only">Search manifest</label>
+            <input type="search" id="manifest-search" placeholder="Search route or ticket ID…" class="ml-auto">
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <div class="flex items-center gap-2">
+              <label for="manifest-sort" class="text-[11px] text-chalkdim uppercase tracking-widest">Sort</label>
+              <select id="manifest-sort">
+                <option value="default">Default</option>
+                <option value="eta">ETA — soonest</option>
+                <option value="weight-desc">Weight — heaviest</option>
+                <option value="weight-asc">Weight — lightest</option>
+                <option value="id">Ticket ID</option>
+              </select>
+            </div>
+            <button type="button" id="clear-delivered" class="filter-tab">Clear delivered</button>
+          </div>
+
+          <p id="courier-filter-note" class="text-[11px] text-safety mb-3" hidden>
+            Showing tickets for <span id="courier-filter-name" class="font-mono"></span> —
+            <button type="button" id="clear-courier-filter" class="underline">clear</button>
+          </p>
+
+          <div class="flex flex-col gap-3" id="manifest-list">
+
+            <!-- Ticket 1: In transit, rush -->
+            <article class="ticket rise" tabindex="0" data-status="transit" data-courier="R. Voss" data-eta="760" data-weight="2.4" data-id="2291">
+              <div class="ticket__perf"></div>
+              <div class="ticket__body">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-mono text-xs text-chalkdim">SW-2291</span>
+                  <span class="badge badge--transit">In transit</span>
+                </div>
+                <h3 class="font-display text-base mb-2">Ironside → Millhaven</h3>
+                <dl class="ticket__meta grid grid-cols-3 gap-2 text-xs mb-3">
+                  <div><dt class="text-chalkdim">Courier</dt><dd>R. Voss</dd></div>
+                  <div><dt class="text-chalkdim">Weight</dt><dd>2.4 kg</dd></div>
+                  <div><dt class="text-chalkdim">ETA</dt><dd>12:40</dd></div>
+                </dl>
+                <div class="progress"><div class="progress__bar is-moving" style="--p:65%"></div></div>
+                <div class="ticket__actions">
+                  <button type="button" class="ticket-action">Mark delivered</button>
+                  <button type="button" class="ticket-delete" aria-label="Delete ticket SW-2291">Delete</button>
+                </div>
+              </div>
+              <span class="stamp stamp--rush">RUSH</span>
+            </article>
+
+            <!-- Ticket 2: Delivered -->
+            <article class="ticket rise" tabindex="0" data-status="done" data-courier="J. Alder" data-eta="731" data-weight="0.8" data-id="2288">
+              <div class="ticket__perf"></div>
+              <div class="ticket__body">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-mono text-xs text-chalkdim">SW-2288</span>
+                  <span class="badge badge--done">Delivered</span>
+                </div>
+                <h3 class="font-display text-base mb-2">Old Port → Northgate</h3>
+                <dl class="ticket__meta grid grid-cols-3 gap-2 text-xs mb-3">
+                  <div><dt class="text-chalkdim">Courier</dt><dd>J. Alder</dd></div>
+                  <div><dt class="text-chalkdim">Weight</dt><dd>0.8 kg</dd></div>
+                  <div><dt class="text-chalkdim">Signed</dt><dd>12:11</dd></div>
+                </dl>
+                <div class="progress"><div class="progress__bar" style="--p:100%; background:var(--stamp)"></div></div>
+                <div class="ticket__actions">
+                  <button type="button" class="ticket-delete" aria-label="Delete ticket SW-2288">Delete</button>
+                </div>
+              </div>
+              <span class="stamp stamp--done">DONE</span>
+            </article>
+
+            <!-- Ticket 3: Pending / unassigned -->
+            <article class="ticket rise" tabindex="0" data-status="pending" data-courier="Unassigned" data-eta="9999" data-weight="5.1" data-id="2295">
+              <div class="ticket__perf"></div>
+              <div class="ticket__body">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-mono text-xs text-chalkdim">SW-2295</span>
+                  <span class="badge badge--pending">Pending pickup</span>
+                </div>
+                <h3 class="font-display text-base mb-2">Northgate → Ironside</h3>
+                <dl class="ticket__meta grid grid-cols-3 gap-2 text-xs mb-3">
+                  <div><dt class="text-chalkdim">Courier</dt><dd class="text-chalkdim">Unassigned</dd></div>
+                  <div><dt class="text-chalkdim">Weight</dt><dd>5.1 kg</dd></div>
+                  <div><dt class="text-chalkdim">ETA</dt><dd class="text-chalkdim">—</dd></div>
+                </dl>
+                <div class="progress"><div class="progress__bar" style="--p:0%"></div></div>
+                <div class="ticket__actions">
+                  <button type="button" class="ticket-action">Mark delivered</button>
+                  <button type="button" class="ticket-delete" aria-label="Delete ticket SW-2295">Delete</button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Ticket 4: Late -->
+            <article class="ticket rise" tabindex="0" data-status="late" data-courier="T. Reyes" data-eta="700" data-weight="1.2" data-id="2277">
+              <div class="ticket__perf"></div>
+              <div class="ticket__body">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-mono text-xs text-chalkdim">SW-2277</span>
+                  <span class="badge badge--late">Late — 15 min</span>
+                </div>
+                <h3 class="font-display text-base mb-2">Millhaven → Old Port</h3>
+                <dl class="ticket__meta grid grid-cols-3 gap-2 text-xs mb-3">
+                  <div><dt class="text-chalkdim">Courier</dt><dd>T. Reyes</dd></div>
+                  <div><dt class="text-chalkdim">Weight</dt><dd>1.2 kg</dd></div>
+                  <div><dt class="text-chalkdim">Was due</dt><dd>11:40</dd></div>
+                </dl>
+                <div class="progress"><div class="progress__bar is-moving" style="--p:82%; background:var(--stop)"></div></div>
+                <div class="ticket__actions">
+                  <button type="button" class="ticket-action">Mark delivered</button>
+                  <button type="button" class="ticket-delete" aria-label="Delete ticket SW-2277">Delete</button>
+                </div>
+              </div>
+              <span class="stamp stamp--late">LATE</span>
+            </article>
+
+            <!-- Ticket 5: In transit -->
+            <article class="ticket rise" tabindex="0" data-status="transit" data-courier="R. Voss" data-eta="785" data-weight="3.6" data-id="2299">
+              <div class="ticket__perf"></div>
+              <div class="ticket__body">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-mono text-xs text-chalkdim">SW-2299</span>
+                  <span class="badge badge--transit">In transit</span>
+                </div>
+                <h3 class="font-display text-base mb-2">Ironside → Old Port</h3>
+                <dl class="ticket__meta grid grid-cols-3 gap-2 text-xs mb-3">
+                  <div><dt class="text-chalkdim">Courier</dt><dd>R. Voss</dd></div>
+                  <div><dt class="text-chalkdim">Weight</dt><dd>3.6 kg</dd></div>
+                  <div><dt class="text-chalkdim">ETA</dt><dd>13:05</dd></div>
+                </dl>
+                <div class="progress"><div class="progress__bar is-moving" style="--p:30%"></div></div>
+                <div class="ticket__actions">
+                  <button type="button" class="ticket-action">Mark delivered</button>
+                  <button type="button" class="ticket-delete" aria-label="Delete ticket SW-2299">Delete</button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+
+          <p id="empty-state" class="text-center text-xs text-chalkdim py-8 border border-dashed border-asphalt3 rounded-sm" hidden>
+            No tickets match your filters right now.
+          </p>
+        </div>
+
+        <!-- NEW DISPATCH FORM -->
+        <aside aria-labelledby="new-dispatch-heading">
+          <h2 id="new-dispatch-heading" class="font-display text-sm tracking-widest uppercase text-chalkdim mb-3">New dispatch</h2>
+          <form id="dispatch-form" novalidate class="bg-asphalt2 border border-asphalt3 rounded-sm p-5">
+            <fieldset class="space-y-4">
+              <legend class="sr-only">New dispatch details</legend>
+
+              <div class="field">
+                <label for="pickup">Pickup address</label>
+                <input type="text" id="pickup" name="pickup" required minlength="4" placeholder="118 Ironside Ave">
+                <span class="field__error">Enter a pickup address (4+ characters).</span>
+              </div>
+
+              <div class="field">
+                <label for="dropoff">Dropoff address</label>
+                <input type="text" id="dropoff" name="dropoff" required minlength="4" placeholder="44 Millhaven St">
+                <span class="field__error">Enter a dropoff address (4+ characters).</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div class="field">
+                  <label for="weight">Weight (kg)</label>
+                  <input type="number" id="weight" name="weight" required min="0.1" max="50" step="0.1" placeholder="2.4">
+                  <span class="field__error">0.1–50 kg.</span>
+                </div>
+                <div class="field">
+                  <label for="priority">Priority</label>
+                  <select id="priority" name="priority" required>
+                    <option value="" selected disabled>Choose…</option>
+                    <option value="standard">Standard</option>
+                    <option value="rush">Rush</option>
+                    <option value="same-hour">Same-hour</option>
+                  </select>
+                  <span class="field__error">Select a priority.</span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="phone">Courier contact phone</label>
+                <input type="tel" id="phone" name="phone" required pattern="[0-9\-\+\(\)\s]{7,}" placeholder="(555) 019-2244">
+                <span class="field__error">Enter a valid phone number.</span>
+              </div>
+
+              <div class="field">
+                <label for="notes">Notes <span class="normal-case text-chalkdim">(optional)</span></label>
+                <textarea id="notes" name="notes" rows="2" placeholder="Fragile, ring twice"></textarea>
+              </div>
+
+              <button type="submit" class="btn-send">Send to dispatch</button>
+              <p class="form-success" id="form-success" hidden>Ticket <span id="success-id" class="font-bold"></span> sent to dispatch.</p>
+            </fieldset>
+          </form>
+        </aside>
+
+      </section>
+
+      <!-- COURIER ROSTER -->
+      <section id="couriers">
+        <h2 class="font-display text-sm tracking-widest uppercase text-chalkdim mb-3">On shift <span class="normal-case text-[11px]">— tap a rider to see their tickets</span></h2>
+        <div class="flex flex-wrap gap-3" id="courier-roster">
+
+          <article class="rise courier-card flex items-center gap-3 bg-asphalt2 border border-asphalt3 rounded-sm px-4 py-3 flex-1 min-w-[200px]" data-courier="R. Voss" tabindex="0" role="button" aria-pressed="false">
+            <span class="font-display text-sm bg-asphalt3 text-chalk w-9 h-9 rounded-full grid place-items-center">RV</span>
+            <div class="min-w-0">
+              <p class="text-sm font-medium truncate">R. Voss</p>
+              <p class="text-[11px] text-chalkdim flex items-center gap-1.5"><span class="dot dot--onroute"></span>On route · Ironside</p>
+            </div>
+          </article>
+
+          <article class="rise courier-card flex items-center gap-3 bg-asphalt2 border border-asphalt3 rounded-sm px-4 py-3 flex-1 min-w-[200px]" data-courier="J. Alder" tabindex="0" role="button" aria-pressed="false">
+            <span class="font-display text-sm bg-asphalt3 text-chalk w-9 h-9 rounded-full grid place-items-center">JA</span>
+            <div class="min-w-0">
+              <p class="text-sm font-medium truncate">J. Alder</p>
+              <p class="text-[11px] text-chalkdim flex items-center gap-1.5"><span class="dot dot--idle"></span>Idle · Old Port</p>
+            </div>
+          </article>
+
+          <article class="rise courier-card flex items-center gap-3 bg-asphalt2 border border-asphalt3 rounded-sm px-4 py-3 flex-1 min-w-[200px]" data-courier="T. Reyes" tabindex="0" role="button" aria-pressed="false">
+            <span class="font-display text-sm bg-asphalt3 text-chalk w-9 h-9 rounded-full grid place-items-center">TR</span>
+            <div class="min-w-0">
+              <p class="text-sm font-medium truncate">T. Reyes</p>
+              <p class="text-[11px] text-chalkdim flex items-center gap-1.5"><span class="dot dot--onroute"></span>On route · Millhaven</p>
+            </div>
+          </article>
+
+          <article class="rise courier-card flex items-center gap-3 bg-asphalt2 border border-asphalt3 rounded-sm px-4 py-3 flex-1 min-w-[200px]" data-courier="M. Osei" tabindex="0" role="button" aria-pressed="false">
+            <span class="font-display text-sm bg-asphalt3 text-chalk w-9 h-9 rounded-full grid place-items-center">MO</span>
+            <div class="min-w-0">
+              <p class="text-sm font-medium truncate">M. Osei</p>
+              <p class="text-[11px] text-chalkdim flex items-center gap-1.5"><span class="dot dot--onroute"></span>On route · Northgate</p>
+            </div>
+          </article>
+
+          <article class="rise flex items-center gap-3 bg-asphalt2 border border-asphalt3 rounded-sm px-4 py-3 flex-1 min-w-[200px] opacity-60">
+            <span class="font-display text-sm bg-asphalt3 text-chalk w-9 h-9 rounded-full grid place-items-center">KD</span>
+            <div class="min-w-0">
+              <p class="text-sm font-medium truncate">K. Domi</p>
+              <p class="text-[11px] text-chalkdim flex items-center gap-1.5"><span class="dot dot--offline"></span>Off shift</p>
+            </div>
+          </article>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="px-5 lg:px-8 py-4 border-t border-asphalt3 text-[11px] text-chalkdim">
+      Trackline Courier Co. · Dispatch board, Shift B · figures reset at midnight
+    </footer>
+  </div>
+</div>
+    <script src="script.js"></script>
+</body>
+</html>
